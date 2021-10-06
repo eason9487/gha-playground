@@ -4,9 +4,25 @@ on:
   push:
 
 jobs:
+  env:
+    name: Test env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log env
+        run: |
+          echo "github.sha => ${{ github.sha }}"
+          echo "github.event.after => ${{ github.event.after }}"
+          echo "github.event.ref => ${{ github.event.ref }}"
+          echo "${{ github.event.ref }}" | sed 's/^refs\/heads\///'
+          echo "CI_REF=$(echo '${{ github.event.ref }}' | sed 's/^refs\/heads\///')" >> $GITHUB_ENV
+
+      - name: Print env
+        run: echo "${{ env.CI_REF }}"
+
   Howdy:
     name: JavaScript unit tests
     runs-on: ubuntu-latest
+    if: ${{ '' != '' }} # skip
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
