@@ -19,5 +19,5 @@ jobs:
 
       - name: Annotate code linting results
         run: |
-          node js/src/print-annotation.js
           echo "::error file=js/src/app.js,line=7,endLine=7,col=8,endColumn=22::[no-unused-vars] 'unusedVariable' is assigned a value but never used."
+          node js/src/print-annotation.js
