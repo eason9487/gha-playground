@@ -19,5 +19,4 @@ jobs:
 
       - name: Annotate code linting results
         run: |
-          sleep 300
           node js/src/print-annotation.js
