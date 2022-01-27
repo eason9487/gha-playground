@@ -23,5 +23,6 @@ jobs:
 
       - name: Annotate code linting results
         run: |
+          echo "::debug::${{ github.workflow }}-${{ github.ref }}"
           sleep 120
           node js/src/print-annotation.js
