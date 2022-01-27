@@ -5,6 +5,10 @@ on:
     branches:
       - test/annotation
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   AddAnnotation:
     runs-on: ubuntu-latest
@@ -19,4 +23,5 @@ jobs:
 
       - name: Annotate code linting results
         run: |
+          sleep 300
           node js/src/print-annotation.js
