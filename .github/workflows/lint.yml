@@ -1,0 +1,21 @@
+name: Annotation Commands test
+
+on:
+  push:
+    branches:
+      - test/annotation
+
+jobs:
+  AddAnnotation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Prepare node
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/fermium'
+
+      - name: Annotate code linting results
+        run: node js/src/print-annotation.js
