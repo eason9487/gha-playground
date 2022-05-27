@@ -1,0 +1,10 @@
+{
+    "name": "eason/gha-playground",
+    "type": "project",
+    "require": {
+        "php": ">=7.3"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^2.3"
+    }
+}

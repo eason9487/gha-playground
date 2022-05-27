@@ -1,0 +1,26 @@
+name: Node
+
+on:
+  push:
+    branches:
+      - reuse-gha-tools
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  JSLintingCheck:
+    name: Lint JavaScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prepare node
+        uses: eason9487/gha-tools/.github/actions/prepare-node@gha-actions
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Lint JavaScript and annotate linting errors
+        run: npm run env -- wp-scripts lint-js

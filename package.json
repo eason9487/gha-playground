@@ -1,0 +1,22 @@
+{
+  "name": "gha-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eason9487/gha-playground.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eason9487/gha-playground/issues"
+  },
+  "homepage": "https://github.com/eason9487/gha-playground#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^23.1.0"
+  }
+}
