@@ -18,16 +18,39 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Prepare PHP
-        uses: eason9487/gha-tools/.github/actions/prepare-php@v1
+        uses: eason9487/gha-tools/.github/actions/prepare-php@main
         with:
           php-version: "7.4"
           tools: composer:v1, cs2pr
 
       - name: Prepare MySQL
-        uses: eason9487/gha-tools/.github/actions/prepare-mysql@v1
+        uses: eason9487/gha-tools/.github/actions/prepare-mysql@main
 
       - name: Log PHPCS debug information
         run: vendor/bin/phpcs -i
 
       - name: Create table
         run: mysql -e 'CREATE DATABASE IF NOT EXISTS wordpress_test;' -u root -proot
+
+  no-composer-install:
+    name: Skip composer install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare PHP
+        uses: eason9487/gha-tools/.github/actions/prepare-php@main
+        with:
+          coverage: xdebug
+          install-deps: "no"
+
+  maybe-composer-install:
+    name: Maybe composer install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prepare PHP
+        uses: eason9487/gha-tools/.github/actions/prepare-php@main
+        with:
+          coverage: pcov
+          install-deps: "maybe"
