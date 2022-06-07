@@ -37,16 +37,3 @@ jobs:
         with:
           node-version: 16
           install-deps: "no"
-
-  maybe-npm-ci:
-    name: Maybe npm ci
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Prepare node
-        uses: eason9487/gha-tools/.github/actions/prepare-node@main
-        with:
-          node-version: 16
-          install-deps: "maybe"
