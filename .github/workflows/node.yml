@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Prepare node
-        uses: eason9487/gha-tools/.github/actions/prepare-node@actions@v1
+        uses: eason9487/gha-tools/.github/actions/prepare-node@actions/v1
         with:
           node-version-file: '.nvmrc'
 
@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Prepare node
-        uses: eason9487/gha-tools/.github/actions/prepare-node@actions@v1
+        uses: eason9487/gha-tools/.github/actions/prepare-node@actions/v1
         with:
           node-version: 16
           install-deps: "no"
