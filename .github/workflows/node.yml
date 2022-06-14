@@ -25,6 +25,15 @@ jobs:
       - name: Lint JavaScript and annotate linting errors
         run: npm run env -- wp-scripts lint-js
 
+      - name: README
+        run: |
+          tee README.md << END
+          # Custom GitHub actions
+          ### This is the release build of version \`v1234\`.
+          ### :pushpin: Please visit [here to view the source code of this version](https://github.com/woocommerce/grow/tree/123/packages/js/github-actions).
+          END
+          cat README.md
+
   no-npm-ci:
     name: Skip npm ci
     runs-on: ubuntu-latest
