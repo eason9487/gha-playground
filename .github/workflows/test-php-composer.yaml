@@ -17,7 +17,7 @@ jobs:
       matrix:
         # php: [7.0, 7.1, 7.2, 7.3]
         # php: [7.1, 7.2, 7.3, 7.4]
-        php: [7.1]
+        php: [7.0, 7.1, 7.2, 7.3, 7.4]
         # wc-version: [6.1.0, 6.2.0, 6.3.0, 6.4.0, latest]
         # include:
         #   - wc-version: 6.1.0
@@ -55,7 +55,7 @@ jobs:
 
           # composer self-update --1
           COMPOSER_VER=$(composer --version | awk '{ print $3 }')
-          composer update --prefer-dist --no-interaction
-          # composer install --prefer-dist --no-interaction `if [[ $COMPOSER_VER == 1.* ]]; then printf %s "--no-suggest"; fi`
+          # composer update --prefer-dist --no-interaction
+          composer install --prefer-dist --no-interaction `if [[ $COMPOSER_VER == 1.* ]]; then printf %s "--no-suggest"; fi`
 
           git diff --color
