@@ -12,6 +12,11 @@
     "require": {
         "php": ">=7.0"
     },
+    "config": {
+        "platform": {
+            "php": "7.0"
+        }
+    },
     "autoload": {
         "classmap": ["includes/", "admin/"],
         "psr-4": {
