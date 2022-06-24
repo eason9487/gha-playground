@@ -1,0 +1,61 @@
+name: PHP Unit Tests
+
+on:
+  push:
+    branches:
+      - php-matrix
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  UnitTests:
+    name: PHP unit tests - PHP ${{ matrix.php }}, WP ${{ matrix.wp-version }}, WC ${{ matrix.wc-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # php: [7.0, 7.1, 7.2, 7.3]
+        # php: [7.1, 7.2, 7.3, 7.4]
+        php: [7.1]
+        # wc-version: [6.1.0, 6.2.0, 6.3.0, 6.4.0, latest]
+        # include:
+        #   - wc-version: 6.1.0
+        #     wp-version: 5.8
+        #   - wc-version: 6.2.0
+        #     wp-version: 5.9
+        #   - wc-version: 6.3.0
+        #     wp-version: 5.9
+        #   - wc-version: 6.4.0
+        #     wp-version: latest
+        #   - wc-version: latest
+        #     wp-version: latest
+        # exclude:
+        #   # The minimum required PHP version of WC 6.5 is changed to 7.2
+        #   - php: 7.0
+        #     wc-version: latest
+        #   - php: 7.1
+        #     wc-version: latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prepare PHP
+        uses: woocommerce/grow/prepare-php@actions-v1
+        with:
+          php-version: "${{ matrix.php }}"
+          install-deps: "no"
+
+      - name: Install WP tests
+        shell: bash
+        run: |
+          php --version
+          composer --version
+
+          # composer self-update --1
+          COMPOSER_VER=$(composer --version | awk '{ print $3 }')
+          composer update --prefer-dist --no-interaction
+          # composer install --prefer-dist --no-interaction `if [[ $COMPOSER_VER == 1.* ]]; then printf %s "--no-suggest"; fi`
+
+          git diff --color
