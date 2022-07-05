@@ -11,18 +11,20 @@ concurrency:
 
 jobs:
   UnitTests:
-    name: PHP unit tests - PHP ${{ matrix.php }}, WP ${{ matrix.wp-version }}, WC ${{ matrix.wc-versions }}
+    name: PHP unit tests - PHP ${{ matrix.php }}, WP ${{ matrix.wp-version }}, WC ${{ matrix.wc-versions }}, AW ${{ matrix.aw-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php: [7.4]
         wp-version: [latest]
         wc-versions: ["6.4.0, 6.5.0, latest"]
+        aw-version: [develop]
         include:
           # Minimum PHP support and L-2 WP/WC version
           - php: 7.2
             wp-version: 5.8
             wc-versions: 6.4.0
+            aw-version: develop
 
     steps:
       - name: Run PHP unit tests
@@ -37,8 +39,8 @@ jobs:
 
           for WC_VERSION in "${WC_VERSIONS[@]}"; do
             if [ "$INIT_INSTALL" = true ]; then
-              echo "::group::Install WP ${{ matrix.wp-version }} and WC ${WC_VERSION}"
-              echo "./bin/install-unit-tests.sh wordpress_test root root localhost ${{ matrix.wp-version }} $WC_VERSION"
+              echo "::group::Install WP ${{ matrix.wp-version }}, WC ${WC_VERSION}" and AW ${{ matrix.aw-version }}
+              echo "./bin/install-unit-tests.sh wordpress_test root root localhost ${{ matrix.wp-version }} $WC_VERSION ${{ matrix.aw-version }}"
               INIT_INSTALL=false
             else
               echo "::group::Switch to WP ${{ matrix.wp-version }} and WC ${WC_VERSION}"
