@@ -46,3 +46,5 @@ jobs:
         uses: woocommerce/grow/packages/js/github-actions/actions/publish-extension-dev-build@add/dev-build-gh-action
         with:
           extension-asset-path: test.zip
+          tag-name: dev-build
+          release-title: 'Teeeeeeest build'
