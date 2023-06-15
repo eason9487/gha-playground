@@ -1,0 +1,48 @@
+name: Test Build
+
+on:
+  push:
+    branches:
+      - develop
+      - test-dev-build
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  BuildpPoductionBundle:
+    name: Build Poduction Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build production bundle
+        run: |
+          zip -r test.zip ./
+
+      - name: Upload bundle file to artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bundle
+          path: test.zip
+
+  PublishCIBuild:
+    name: Publish CI Build
+    runs-on: ubuntu-latest
+    needs: BuildpPoductionBundle
+    if: ${{ github.ref_name == 'develop' || github.ref_name == 'test-dev-build' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download bundle file from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: bundle
+
+      - name: Publish development build to GitHub
+        uses: woocommerce/grow/packages/js/github-actions/actions/publish-extension-dev-build@add/dev-build-gh-action
+        with:
+          extension-asset-path: test.zip
