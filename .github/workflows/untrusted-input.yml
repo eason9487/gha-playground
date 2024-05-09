@@ -16,13 +16,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
-          echo "CI_BRANCH=${{ github.head_ref }}" >> $GITHUB_ENV
+          echo "CI_BRANCH=${HEAD_REF}" >> $GITHUB_ENV
 
       - shell: bash
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           echo "test 123" > ./README.md
           git add ./README.md
-          git commit -q -m "Update README from ${{ github.head_ref }} branch."
+          git commit -q -m "Update README from ${HEAD_REF} branch."
+          git log
