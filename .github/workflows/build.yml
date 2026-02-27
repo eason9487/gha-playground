@@ -16,14 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build production bundle
         run: |
           zip -r test.zip ./
 
       - name: Upload bundle file to artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bundle
           path: test.zip
@@ -35,16 +35,16 @@ jobs:
     if: ${{ github.ref_name == 'develop' || github.ref_name == 'test-dev-build' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download bundle file from artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: bundle
 
       - name: Publish development build to GitHub
-        uses: woocommerce/grow/packages/js/github-actions/actions/publish-extension-dev-build@add/dev-build-gh-action
+        uses: woocommerce/grow/publish-extension-dev-build@tweak/bump-github-actions-deps-test-build
         with:
           extension-asset-path: test.zip
           tag-name: dev-build
-          release-title: 'Teeeeeeest build'
+          release-title: 'Teeeeeeest dev build'
