@@ -1,0 +1,51 @@
+name: 'Repro: fork PR checkout guard'
+
+# Mirrors the production auto-milestone workflow's trigger (a fork PR
+# merged into the base branch) to reproduce the actions/checkout v7
+# "pwn request" guard. Prints the resolved refs/SHAs before checkout.
+
+on:
+  pull_request_target:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  repro:
+    name: 'Fork PR checkout'
+    runs-on: ubuntu-latest
+    steps:
+      # Values go through env, never interpolated into the shell, so a
+      # crafted fork branch name cannot inject commands.
+      - name: Show context
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ACTION: ${{ github.event.action }}
+          MERGED: ${{ github.event.pull_request.merged }}
+          GH_REF: ${{ github.ref }}
+          GH_SHA: ${{ github.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          echo "event_name=$EVENT_NAME action=$ACTION merged=$MERGED"
+          echo "github.ref=$GH_REF"
+          echo "github.sha=$GH_SHA"
+          echo "head.repo=$HEAD_REPO"
+          echo "head.ref=$HEAD_REF"
+          echo "head.sha=$HEAD_SHA"
+          echo "base.ref=$BASE_REF"
+          echo "base.sha=$BASE_SHA"
+          echo "merge_commit_sha=$MERGE_SHA"
+
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Confirm checkout succeeded
+        if: success()
+        run: echo "Checkout succeeded, guard did NOT fire on this event."
