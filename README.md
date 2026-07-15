@@ -1,3 +1,3 @@
 # gha-playground
 
-My GitHub Actions playground
+My GitHub Actions playground.
