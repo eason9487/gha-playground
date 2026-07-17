@@ -1,0 +1,7 @@
+{
+  "name": "gha-playground-monorepo",
+  "private": true,
+  "devDependencies": {
+    "@playground/internal-tooling": "workspace:*"
+  }
+}

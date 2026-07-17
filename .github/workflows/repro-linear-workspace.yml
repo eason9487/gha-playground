@@ -1,0 +1,68 @@
+name: 'Repro: Linear steps break after checkout'
+
+# Reproduces the regression flagged on woocommerce/woocommerce#66694, mirroring
+# the docs-needed-detection workflow's two Linear steps (Setup Linear + Create
+# Linear Issue) in two fully isolated jobs on separate runners:
+#
+#   buggy  (expected RED):   after a checkout puts the monorepo root package.json
+#          (workspace:* dep) into GITHUB_WORKSPACE, `npm install @linear/sdk`
+#          aborts with EUNSUPPORTEDPROTOCOL, so Create Linear Issue's require()
+#          cannot obtain LinearClient.
+#   fixed  (expected GREEN): install into an isolated ${{ runner.temp }} prefix
+#          and point NODE_PATH there, and require() resolves LinearClient.
+#
+# Minimal scale: a stand-in root package.json with one workspace:* dep, no
+# claude-code-action, no secrets. github-script's require() is exercised exactly
+# as the production Create Linear Issue step does it.
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  buggy:
+    name: 'Buggy: install in workspace, then require (expected to fail)'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Show the root package.json the checkout brought into the workspace
+        run: cat package.json
+
+      - name: 'Setup Linear (buggy): npm install in the workspace root'
+        continue-on-error: true
+        run: npm install @linear/sdk@71.0.0
+
+      - name: 'Create Linear Issue (buggy): require @linear/sdk'
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const { LinearClient } = require( '@linear/sdk' );
+            core.info( `LinearClient: ${ typeof LinearClient }` );
+
+  fixed:
+    name: 'Fixed: isolated install + NODE_PATH require (expected to pass)'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: 'Setup Linear (fixed): install into an isolated prefix'
+        run: npm install --prefix "${{ runner.temp }}/linear" @linear/sdk@71.0.0
+
+      - name: 'Create Linear Issue (fixed): require @linear/sdk via NODE_PATH'
+        env:
+          NODE_PATH: ${{ runner.temp }}/linear/node_modules
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const { LinearClient } = require( '@linear/sdk' );
+            if ( typeof LinearClient !== 'function' ) {
+              core.setFailed( `LinearClient not resolved (typeof ${ typeof LinearClient })` );
+            } else {
+              core.info( `LinearClient resolved: ${ typeof LinearClient }` );
+            }
