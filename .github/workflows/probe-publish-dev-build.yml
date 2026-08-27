@@ -1,0 +1,22 @@
+name: Probe publish-extension-dev-build
+on:
+  push:
+    branches: [test/self-repo-syntax-e2e]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - name: Build a placeholder asset
+        run: |
+          mkdir -p build
+          echo "placeholder" > build/readme.txt
+          cd build
+          zip ../gha-playground.zip readme.txt
+      - uses: woocommerce/grow/publish-extension-dev-build@800d57eddf9c168186ab939467f02633680b781a
+        with:
+          extension-asset-path: gha-playground.zip

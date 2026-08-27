@@ -1,0 +1,9 @@
+{
+	"name": "eason9487/gha-playground",
+	"description": "Scratch repository for GitHub Actions experiments.",
+	"license": "MIT",
+	"require-dev": {
+		"squizlabs/php_codesniffer": "^3.13",
+		"exussum12/coverage-checker": "^1.0"
+	}
+}

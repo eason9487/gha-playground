@@ -1,0 +1,12 @@
+name: Probe phpcs-diff
+on:
+  push:
+    branches: [test/self-repo-syntax-e2e]
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # The action checks out on its own, so no checkout step is needed here.
+      - uses: woocommerce/grow/phpcs-diff@800d57eddf9c168186ab939467f02633680b781a
